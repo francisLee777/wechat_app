@@ -99,3 +99,35 @@
   font-size: 16px;
   color: #333;
 }
+
+/* 登录区域 */
+.login-container {
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.login-tip {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.login-desc {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 40px;
+}
+
+.login-btn {
+  width: 70%;
+}

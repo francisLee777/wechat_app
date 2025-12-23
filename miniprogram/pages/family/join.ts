@@ -11,7 +11,7 @@ Page({
     });
   },
 
-  handleJoin() {
+  async handleJoin() {
     const id = this.data.familyId.trim();
     if (!id) {
       wx.showToast({ title: '请输入家庭ID', icon: 'none' });
@@ -19,7 +19,7 @@ Page({
     }
 
     try {
-      const family = joinFamily(id);
+      const family = await joinFamily(id);
       wx.showToast({ title: `成功加入: ${family.name}`, icon: 'success' });
       
       setTimeout(() => {

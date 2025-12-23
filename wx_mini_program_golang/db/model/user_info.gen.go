@@ -19,6 +19,8 @@ type UserInfoDBModel struct {
 	Status       int32     `gorm:"column:status;type:int(11);not null;default:1;comment:1-正常状态  2-删号" json:"status"`                             // 1-正常状态  2-删号
 	CreateTime   time.Time `gorm:"column:create_time;type:timestamp;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"`         // 创建时间
 	UpdateTime   time.Time `gorm:"column:update_time;type:timestamp;not null;default:CURRENT_TIMESTAMP;comment:最后更新时间" json:"update_time"`       // 最后更新时间
+	FamilyID     int64     `gorm:"column:family_id;type:bigint(20) unsigned;default:0;comment:所属家庭ID" json:"familyId"`                             // 所属家庭ID
+	Role         string    `gorm:"column:role;type:varchar(32);default:'member';comment:角色: admin/member" json:"role"`                               // 角色
 }
 
 // TableName UserInfoDBModel's table name

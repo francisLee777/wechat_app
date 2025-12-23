@@ -1,38 +1,48 @@
 <view class="container">
-  <!-- 用户信息区域 -->
-  <view class="user-info">
-    <view class="avatar">
-      <open-data type="userAvatarUrl"></open-data>
+  <block wx:if="{{isLoggedIn}}">
+    <!-- 用户信息区域 -->
+    <view class="user-info">
+      <view class="avatar">
+        <open-data type="userAvatarUrl"></open-data>
+      </view>
+      <view class="nickname">
+        <text>你好，</text>
+        <open-data type="userNickName"></open-data>
+      </view>
+      <view class="user-id" bindtap="copyUserId">ID: {{user.id}} (点击复制)</view>
     </view>
-    <view class="nickname">
-      <text>你好，</text>
-      <open-data type="userNickName"></open-data>
-    </view>
-    <view class="user-id" bindtap="copyUserId">ID: {{user.id}} (点击复制)</view>
-  </view>
 
-  <!-- 未加入家庭：显示入口 -->
-  <view class="no-family-section" wx:if="{{!hasFamily}}">
-    <view class="welcome-text">欢迎来到家庭厨房，请选择：</view>
-    <button class="btn btn-primary" bindtap="goToCreateFamily">创建新家庭 (我是家长)</button>
-    <button class="btn btn-secondary" bindtap="goToJoinFamily">加入现有家庭 (我是成员)</button>
-  </view>
+    <!-- 未加入家庭：显示入口 -->
+    <view class="no-family-section" wx:if="{{!hasFamily}}">
+      <view class="welcome-text">欢迎来到家庭厨房，请选择：</view>
+      <button class="btn btn-primary" bindtap="goToCreateFamily">创建新家庭 (我是家长)</button>
+      <button class="btn btn-secondary" bindtap="goToJoinFamily">加入现有家庭 (我是成员)</button>
+    </view>
 
-  <!-- 已加入家庭：显示功能菜单 -->
-  <view class="dashboard-section" wx:else>
-    <view class="menu-grid">
-      <view class="menu-item" bindtap="goToRecipes">
-        <view class="icon">📖</view>
-        <text>家庭食谱</text>
-      </view>
-      <view class="menu-item" bindtap="goToMessages">
-        <view class="icon">📝</view>
-        <text>留言板</text>
-      </view>
-      <view class="menu-item" bindtap="goToManage">
-        <view class="icon">👨‍👩‍👧‍👦</view>
-        <text>家庭管理</text>
+    <!-- 已加入家庭：显示功能菜单 -->
+    <view class="dashboard-section" wx:else>
+      <view class="menu-grid">
+        <view class="menu-item" bindtap="goToRecipes">
+          <view class="icon">📖</view>
+          <text>家庭食谱</text>
+        </view>
+        <view class="menu-item" bindtap="goToMessages">
+          <view class="icon">📝</view>
+          <text>留言板</text>
+        </view>
+        <view class="menu-item" bindtap="goToManage">
+          <view class="icon">👨‍👩‍👧‍👦</view>
+          <text>家庭管理</text>
+        </view>
       </view>
     </view>
+  </block>
+
+  <!-- 未登录状态 -->
+  <view class="login-container" wx:else>
+    <view class="login-icon">🔒</view>
+    <view class="login-tip">请登录</view>
+    <view class="login-desc">登录后使用家庭厨房功能</view>
+    <button class="btn btn-primary login-btn" bindtap="handleLogin">登录</button>
   </view>
 </view>

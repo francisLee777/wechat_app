@@ -9,9 +9,9 @@ Page({
     content: ''
   },
 
-  onLoad(options: any) {
+  async onLoad(options: any) {
     if (options.id) {
-      const recipe = getRecipeById(options.id);
+      const recipe = await getRecipeById(options.id);
       if (recipe) {
         this.setData({
           isEdit: true,
@@ -71,22 +71,30 @@ Page({
   },
 
   // 保存
-  handleSave() {
+  async handleSave() {
     const { id, name, images, content, isEdit } = this.data;
     if (!name) {
       wx.showToast({ title: '请输入名称', icon: 'none' });
+      return;
+    }
+    if (name.length > 50) {
+      wx.showToast({ title: '名称不能超过50字', icon: 'none' });
       return;
     }
     if (!content) {
       wx.showToast({ title: '请输入制作步骤', icon: 'none' });
       return;
     }
+    if (content.length > 2000) {
+      wx.showToast({ title: '内容不能超过2000字', icon: 'none' });
+      return;
+    }
 
     try {
       if (isEdit) {
-        updateRecipe(id, name, images, content);
+        await updateRecipe(id, name, images, content);
       } else {
-        addRecipe(name, images, content);
+        await addRecipe(name, images, content);
       }
       wx.showToast({ title: '保存成功', icon: 'success' });
       setTimeout(() => wx.navigateBack(), 1500);
@@ -102,10 +110,10 @@ Page({
     wx.showModal({
       title: '确认删除',
       content: '确定要删除这个食谱吗？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           try {
-            deleteRecipe(this.data.id);
+            await deleteRecipe(this.data.id);
             wx.showToast({ title: '已删除', icon: 'success' });
             setTimeout(() => wx.navigateBack({ delta: 2 }), 1500); // 返回列表
           } catch (e: any) {

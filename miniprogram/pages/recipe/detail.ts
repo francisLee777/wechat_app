@@ -20,13 +20,13 @@ Page({
     }
   },
 
-  loadData(id: string) {
-    const recipe = getRecipeById(id);
+  async loadData(id: string) {
+    const recipe = await getRecipeById(id);
     const user = getCurrentUser();
     
     this.setData({
       recipe: recipe || null,
-      isAdmin: user.role === 'admin',
+      isAdmin: user ? user.role === 'admin' : false,
       currentImageIndex: 0 // 重置图片索引
     });
   },

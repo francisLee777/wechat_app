@@ -13,15 +13,19 @@ Page({
   },
 
   // 创建家庭
-  handleCreate() {
+  async handleCreate() {
     const name = this.data.familyName.trim();
     if (!name) {
       wx.showToast({ title: '请输入家庭名称', icon: 'none' });
       return;
     }
+    if (name.length > 20) {
+      wx.showToast({ title: '家庭名称不能超过20字', icon: 'none' });
+      return;
+    }
 
     try {
-      const family = createFamily(name);
+      const family = await createFamily(name);
       wx.showToast({ title: '创建成功', icon: 'success' });
       
       // 延迟返回首页

@@ -1,7 +1,7 @@
 <view class="container">
   <view class="form-group">
     <text class="label">食谱名称</text>
-    <input placeholder="例如：红烧肉" value="{{name}}" bindinput="onNameInput" />
+    <input placeholder="例如：红烧肉" value="{{name}}" bindinput="onNameInput" maxlength="50" />
   </view>
 
   <view class="form-group">
@@ -26,7 +26,7 @@
       placeholder="请输入食材清单和详细制作步骤..." 
       value="{{content}}" 
       bindinput="onContentInput"
-      maxlength="-1"
+      maxlength="2000"
     ></textarea>
   </view>
 

@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"wxcloudrun-golang/conf"
+	"wxcloudrun-golang/db"
+	"wxcloudrun-golang/db/model"
 )
 
 // WechatLoginResponse 微信登录接口的响应结构
@@ -59,10 +61,18 @@ func WechatLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 在这里处理登录逻辑，例如：
-	// 1. 检查数据库中是否已存在该用户
-	// 2. 如果不存在，创建新用户
-	// 3. 生成自定义登录态（如 JWT token）
+	// 自动注册用户
+	userInfo := model.UserInfoDBModel{
+		OpenID:       wechatResp.OpenID,
+		UserNickName: "微信用户", // 默认昵称
+		Role:         "member",
+	}
+
+	// 如果不存在则创建
+	if err := db.Get().Where(model.UserInfoDBModel{OpenID: wechatResp.OpenID}).FirstOrCreate(&userInfo).Error; err != nil {
+		http.Error(w, `{"error": "Database error"}`, http.StatusInternalServerError)
+		return
+	}
 
 	// 构造响应
 	response := map[string]string{

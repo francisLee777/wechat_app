@@ -11,17 +11,21 @@ Page({
     this.loadData();
   },
 
-  loadData() {
+  async loadData() {
     const user = getCurrentUser();
     this.setData({ currentUser: user });
 
-    if (user.familyId) {
-      const family = getFamilyById(user.familyId);
-      const members = getFamilyMembers(user.familyId);
-      this.setData({
-        family: family || null,
-        members: members
-      });
+    if (user && user.familyId) {
+      try {
+        const family = await getFamilyById(user.familyId);
+        const members = await getFamilyMembers(user.familyId);
+        this.setData({
+          family: family || null,
+          members: members
+        });
+      } catch (e) {
+        console.error(e);
+      }
     } else {
       // 异常情况，返回首页
       wx.navigateBack();
@@ -46,10 +50,10 @@ Page({
     wx.showModal({
       title: '确认移除',
       content: `确定要将 ${name} 移出家庭吗？`,
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           try {
-            removeMember(userId);
+            await removeMember(userId);
             this.loadData(); // 刷新列表
             wx.showToast({ title: '已移除', icon: 'success' });
           } catch (e: any) {
@@ -65,10 +69,10 @@ Page({
     wx.showModal({
       title: '确认退出',
       content: '确定要退出当前家庭吗？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           try {
-            quitFamily();
+            await quitFamily();
             wx.reLaunch({ url: '/pages/index/index' }); // 退出后重置到首页
           } catch (e: any) {
             wx.showToast({ title: e.message, icon: 'none' });

@@ -23,20 +23,24 @@ Page({
   checkRole() {
     const user = getCurrentUser();
     this.setData({
-      isAdmin: user.role === 'admin'
+      isAdmin: user ? user.role === 'admin' : false
     });
   },
 
-  loadData() {
-    const list = getRecipes(this.data.keyword);
-    // 初始化样式数组
-    const styles = list.map(() => '');
-    this.setData({ 
-      recipes: list,
-      listStyles: styles,
-      draggingIndex: -1,
-      targetIndex: -1
-    });
+  async loadData() {
+    try {
+      const list = await getRecipes(this.data.keyword);
+      // 初始化样式数组
+      const styles = list.map(() => '');
+      this.setData({ 
+        recipes: list,
+        listStyles: styles,
+        draggingIndex: -1,
+        targetIndex: -1
+      });
+    } catch (e) {
+      console.error(e);
+    }
   },
 
   onSearchInput(e: any) {
@@ -149,7 +153,7 @@ Page({
           sortOrder: now + (len - i) * 1000
         }));
 
-        batchUpdateRecipes(updatedRecipes);
+        batchUpdateRecipes(updatedRecipes).catch(err => console.error(err));
       }
 
       // 原子操作：同时更新数据和重置样式

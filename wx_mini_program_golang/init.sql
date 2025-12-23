@@ -39,5 +39,48 @@ create table user_info
     status        int          default 1                 not null comment '1-正常状态  2-删号',
     create_time   timestamp    default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time   timestamp    default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间',
+    family_id     bigint unsigned default 0                 not null comment '所属家庭ID',
+    role          varchar(32)     default 'member'          not null comment '角色: admin/member',
     unique uk_open_id (openId)
 ) comment '用户信息';
+
+-- 家庭表
+create table family
+(
+    id            bigint unsigned auto_increment comment '自增id' primary key,
+    name          varchar(128) default ''                not null comment '家庭名称',
+    owner_id      varchar(128) default ''                not null comment '创建人openId',
+    create_time   timestamp    default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time   timestamp    default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间'
+) comment '家庭表';
+
+-- 食谱表
+create table recipe
+(
+    id            bigint unsigned auto_increment comment '自增id' primary key,
+    family_id     bigint unsigned default 0                 not null comment '家庭id',
+    name          varchar(128)  default ''                not null comment '食谱名称',
+    images        json                                    comment '成品照片路径列表',
+    content       text                                    comment '食谱具体内容',
+    sort_order    bigint        default 0                 not null comment '排序字段',
+    create_time   timestamp     default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time   timestamp     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '最后更新时间',
+    index idx_family (family_id)
+) comment '食谱表';
+
+-- 留言表
+create table message
+(
+    id                 bigint unsigned auto_increment comment '自增id' primary key,
+    family_id          bigint unsigned default 0                 not null comment '家庭id',
+    user_id            varchar(128)  default ''                not null comment '留言者openId',
+    user_name          varchar(128)  default ''                not null comment '留言者昵称',
+    user_avatar        varchar(512)  default ''                not null comment '留言者头像',
+    content            text                                    comment '留言内容',
+    parent_id          bigint unsigned default null              comment '父留言ID',
+    reply_to_user_id   varchar(128)  default ''                comment '回复给谁',
+    reply_to_user_name varchar(128)  default ''                comment '回复给谁的昵称',
+    create_time        timestamp     default CURRENT_TIMESTAMP not null comment '创建时间',
+    index idx_family_msg (family_id),
+    index idx_parent (parent_id)
+) comment '留言表';

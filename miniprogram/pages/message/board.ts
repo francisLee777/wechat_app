@@ -13,17 +13,21 @@ Page({
     this.loadData();
   },
 
-  loadData() {
-    const rawList = getMessages();
-    const list = rawList.map(msg => ({
-      ...msg,
-      timeStr: formatTime(new Date(msg.createTime)),
-      replies: (msg.replies || []).map((r: any) => ({
-        ...r,
-        timeStr: formatTime(new Date(r.createTime))
-      }))
-    }));
-    this.setData({ messages: list });
+  async loadData() {
+    try {
+      const rawList = await getMessages();
+      const list = rawList.map(msg => ({
+        ...msg,
+        timeStr: formatTime(new Date(msg.createTime)),
+        replies: (msg.replies || []).map((r: any) => ({
+          ...r,
+          timeStr: formatTime(new Date(r.createTime))
+        }))
+      }));
+      this.setData({ messages: list });
+    } catch (e) {
+      console.error(e);
+    }
   },
 
   onInput(e: any) {
@@ -31,10 +35,10 @@ Page({
   },
 
   // 发送留言
-  handleSend() {
+  async handleSend() {
     if (!this.data.content.trim()) return;
     try {
-      addMessage(this.data.content);
+      await addMessage(this.data.content);
       this.setData({ content: '' });  
       this.loadData();
       wx.showToast({ title: '已发送', icon: 'none' });
@@ -49,10 +53,10 @@ Page({
     wx.showModal({
       title: '提示',
       content: '确定删除吗？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           try {
-            deleteMessage(id);
+            await deleteMessage(id);
             this.loadData();
           } catch (e: any) {
             wx.showToast({ title: e.message, icon: 'none' });
@@ -73,6 +77,10 @@ Page({
       placeholderText: '请输入回复内容',
       success: (res) => {
         if (res.confirm && res.content) {
+          if (res.content.length > 100) {
+            wx.showToast({ title: '回复内容不能超过100字', icon: 'none' });
+            return;
+          }
           try {
             // 调用统一的 addMessage 接口，传入 parentId
             addMessage(res.content, parentId);
