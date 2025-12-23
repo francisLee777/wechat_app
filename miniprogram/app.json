@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/family/create",
+    "pages/family/join",
+    "pages/family/manage",
+    "pages/recipe/list",
+    "pages/recipe/detail",
+    "pages/recipe/edit",
+    "pages/message/board"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "家庭厨房",
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents"
+}

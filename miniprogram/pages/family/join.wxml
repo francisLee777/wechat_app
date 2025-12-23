@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="title">加入现有家庭</view>
+  <view class="input-group">
+    <text>请输入家庭ID：</text>
+    <input 
+      placeholder="向家长索要家庭ID" 
+      value="{{familyId}}" 
+      bindinput="onIdInput"
+    />
+  </view>
+  <button class="btn-submit" bindtap="handleJoin">加入家庭</button>
+  <view class="tips">提示：家庭ID可以在“家庭管理”页面查看</view>
+</view>

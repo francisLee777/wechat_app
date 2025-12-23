@@ -1,0 +1,35 @@
+.container {
+  padding: 30px 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 30px;
+}
+
+.input-group text {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.input-group input {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  height: 40px;
+}
+
+.btn-submit {
+  background-color: #07c160;
+  color: white;
+  width: 100%;
+}

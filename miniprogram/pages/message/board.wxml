@@ -1,0 +1,67 @@
+<view class="container">
+  <scroll-view scroll-y class="message-list">
+    <view class="message-item" wx:for="{{messages}}" wx:key="id">
+      <view class="msg-header">
+        <view class="user-info">
+          <view class="avatar-placeholder">{{item.userName[0]}}</view>
+          <view class="info-text">
+            <text class="username">{{item.userName}}</text>
+            <text class="time">{{item.timeStr}}</text>
+          </view>
+        </view>
+        <view class="actions">
+          <text 
+            class="action-btn reply" 
+            bindtap="handleReply" 
+            data-id="{{item.id}}" 
+            data-user="{{item.userName}}"
+          >回复</text>
+          
+          <text 
+            class="action-btn delete" 
+            bindtap="handleDelete" 
+            data-id="{{item.id}}"
+            wx:if="{{currentUser.role === 'admin' || currentUser.id === item.userId}}"
+          >删除</text>
+        </view>
+      </view>
+      
+      <view class="msg-content">{{item.content}}</view>
+      
+      <!-- 回复列表 -->
+      <view class="reply-list" wx:if="{{item.replies.length > 0}}">
+        <view class="reply-item" wx:for="{{item.replies}}" wx:for-item="reply" wx:key="id">
+          <view class="reply-header">
+            <text class="reply-user">{{reply.userName}}</text>
+            <text class="reply-time">{{reply.timeStr}}</text>
+            
+            <text 
+              class="reply-delete" 
+              bindtap="handleDelete" 
+              data-id="{{reply.id}}"
+              wx:if="{{currentUser.role === 'admin' || currentUser.id === reply.userId}}"
+            >删除</text>
+          </view>
+          <view class="reply-content">{{reply.content}}</view>
+        </view>
+      </view>
+    </view>
+    
+    <view wx:if="{{messages.length === 0}}" class="empty-tip">暂无留言，快来写第一条吧~</view>
+  </scroll-view>
+
+  <!-- 底部输入框 -->
+  <view class="input-area">
+    <textarea 
+      class="input" 
+      placeholder="写点什么..." 
+      value="{{content}}" 
+      bindinput="onInput"
+      confirm-type="send"
+      auto-height
+      cursor-spacing="20"
+      maxlength="500"
+    ></textarea>
+    <button class="send-btn" bindtap="handleSend">发送</button>
+  </view>
+</view>

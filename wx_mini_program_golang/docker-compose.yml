@@ -1,0 +1,65 @@
+services:
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=745620
+      - MYSQL_DATABASE=francis
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - francis_mysql_data:/var/lib/mysql
+    networks:
+      - web222
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  my_golang_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    #    volumes:
+    #      - ./:/app
+    expose:
+      - "8080"  # 只在 Docker 网络内暴露端口，外部无法访问。容器间通信使用的是下面的 web222
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=745620
+      - DB_NAME=francis
+      - DOCKER_BUILDKIT=1
+      - COMPOSE_DOCKER_CLI_BUILD=1
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - web222  # 容器间通信需要在同一网络
+    command: [ "/app/main" ]  # 在 Dockerfile 里写 CMD ["/app/main"] 一样的
+
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - web222
+    depends_on:
+      - my_golang_app
+
+
+volumes:
+  francis_mysql_data:
+  go-build-cache:
+
+networks:
+  web222:
+    external: true

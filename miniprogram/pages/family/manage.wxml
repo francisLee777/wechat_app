@@ -1,0 +1,37 @@
+<view class="container">
+  <!-- 家庭信息 -->
+  <view class="family-card">
+    <view class="family-name">{{family.name}}</view>
+    <view class="family-id" bindtap="copyFamilyId">
+      邀请码(家庭ID): {{family.id}} 
+      <text class="copy-hint">(点击复制)</text>
+    </view>
+  </view>
+
+  <!-- 成员列表 -->
+  <view class="section-title">家庭成员 ({{members.length}}人)</view>
+  <view class="member-list">
+    <view class="member-item" wx:for="{{members}}" wx:key="id">
+      <view class="member-info">
+        <view class="avatar-placeholder">{{item.nickName[0]}}</view>
+        <view class="member-detail">
+          <text class="member-name">
+            {{item.nickName}}
+            <text wx:if="{{item.id === currentUser.id}}">(我)</text>
+          </text>
+          <text class="member-role">{{item.role === 'admin' ? '家长' : '成员'}}</text>
+        </view>
+      </view>
+      
+      <!-- 家长管理操作 -->
+      <view class="member-action" wx:if="{{currentUser.role === 'admin' && item.role !== 'admin'}}">
+        <button size="mini" type="warn" bindtap="handleRemove" data-id="{{item.id}}" data-name="{{item.nickName}}">移除</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="footer-action">
+    <button class="btn-quit" bindtap="handleQuit" wx:if="{{currentUser.role !== 'admin'}}">退出家庭</button>
+  </view>
+</view>

@@ -1,0 +1,101 @@
+/** index.wxss **/
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 2px solid #ddd;
+}
+
+.nickname {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-id {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+}
+
+/* 未加入家庭区域 */
+.no-family-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-text {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.btn {
+  width: 80%;
+  margin-bottom: 15px;
+  border-radius: 25px;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: #07c160;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #f8f8f8;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* 功能菜单区域 */
+.dashboard-section {
+  width: 100%;
+}
+
+.menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.menu-item {
+  width: 40%;
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-item .icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.menu-item text {
+  font-size: 16px;
+  color: #333;
+}

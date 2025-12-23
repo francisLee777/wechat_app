@@ -1,0 +1,44 @@
+<view class="container" wx:if="{{recipe}}">
+  <!-- 轮播图展示多张照片 -->
+  <view class="swiper-wrapper" wx:if="{{recipe.images.length > 0}}">
+    <swiper  
+      class="swiper-container" 
+      indicator-dots="{{false}}" 
+      autoplay="{{false}}" 
+      circular="{{true}}"
+      bindchange="onSwiperChange"
+    >
+      <block wx:for="{{recipe.images}}" wx:key="*this">
+        <swiper-item>
+          <image src="{{item}}" mode="aspectFill" class="swiper-image" bindtap="previewImage" data-current="{{item}}"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+    <!-- 图片数量指示器 -->
+    <view class="image-counter">
+      {{currentImageIndex + 1}} / {{recipe.images.length}}
+    </view>
+  </view>
+  
+  <!-- 无图时的占位 -->
+  <view class="swiper-container no-image" wx:else>
+    <text>暂无成品照片</text>
+  </view>
+  
+  <view class="content-area">
+    <view class="header">
+      <text class="title">{{recipe.name}}</text>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">制作详情</view>
+      <text class="desc" user-select>{{recipe.content}}</text>
+    </view>
+  </view>
+
+  <!-- 悬浮编辑按钮 -->
+  <view class="fab-edit" bindtap="goToEdit" wx:if="{{isAdmin}}">
+    <text>✎</text>
+  </view>
+</view>
+<view wx:else class="error">未找到食谱</view>

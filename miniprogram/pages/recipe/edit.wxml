@@ -1,0 +1,37 @@
+<view class="container">
+  <view class="form-group">
+    <text class="label">食谱名称</text>
+    <input placeholder="例如：红烧肉" value="{{name}}" bindinput="onNameInput" />
+  </view>
+
+  <view class="form-group">
+    <text class="label">成品照片 (最多3张)</text>
+    <view class="image-list">
+      <block wx:for="{{images}}" wx:key="*this">
+        <view class="image-item">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-src="{{item}}" />
+          <view class="delete-tag" catchtap="deleteImage" data-index="{{index}}">×</view>
+        </view>
+      </block>
+      <view class="image-uploader" bindtap="chooseImage" wx:if="{{images.length < 3}}">
+        <view class="placeholder">+</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="form-group content-group">
+    <text class="label">具体内容/步骤</text>
+    <textarea 
+      class="content-input"
+      placeholder="请输入食材清单和详细制作步骤..." 
+      value="{{content}}" 
+      bindinput="onContentInput"
+      maxlength="-1"
+    ></textarea>
+  </view>
+
+  <view class="btn-area">
+    <button class="btn-primary" bindtap="handleSave">保存</button>
+    <button class="btn-danger" bindtap="handleDelete" wx:if="{{isEdit}}">删除</button>
+  </view>
+</view>

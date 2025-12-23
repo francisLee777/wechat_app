@@ -1,0 +1,197 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f6f6f6;
+}
+
+.message-list {
+  flex: 1;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.message-item {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.msg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  background-color: #eee;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 36px;
+  margin-right: 12px;
+  font-size: 16px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.time {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.actions {
+  display: flex;
+}
+
+.action-btn {
+  font-size: 12px;
+  margin-left: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.delete {
+  color: #fa5151;
+  background-color: #ffecec;
+}
+
+.reply {
+  color: #07c160;
+  background-color: #e6f9ef;
+}
+
+.msg-content {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 新版回复列表样式 */
+.reply-list {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.reply-item {
+  margin-bottom: 12px;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 8px;
+}
+
+.reply-item:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.reply-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.reply-user {
+  font-weight: bold;
+  color: #555;
+}
+
+.reply-time {
+  color: #999;
+  margin-left: 8px;
+  flex: 1;
+}
+
+.reply-delete {
+  color: #fa5151;
+  padding: 2px 5px;
+}
+
+.reply-content {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  margin-top: 50px;
+}
+
+/* 底部输入区 - 重设计 */
+.input-area {
+  background-color: #f7f7f7;
+  padding: 10px 15px;
+  /* 适配 iPhone X 等机型底部安全区 */
+  padding-bottom: calc(10px + constant(safe-area-inset-bottom));
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-end;
+  border-top: 1px solid #eaeaea;
+  position: relative;
+  z-index: 99;
+  box-sizing: border-box; /* 关键：防止 padding 撑大宽度 */
+  width: 100%;
+} 
+
+.input {
+  flex: 1;
+  background-color: #ffffff;
+  min-height: 38px;
+  border-radius: 4px;
+  padding: 9px 12px;
+  margin-right: 2px;
+  font-size: 16px;
+  line-height: 20px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.send-btn {
+  width: 60px !important;
+  min-width: 0 !important;
+  height: 38px;
+  line-height: 38px;
+  background-color: #07c160;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: normal;
+}
+
+.send-btn::after {
+  border: none;
+}

@@ -1,0 +1,87 @@
+import { getMessages, addMessage, deleteMessage, getCurrentUser, Message } from '../../utils/db';
+import { formatTime } from '../../utils/util';
+
+Page({
+  data: {
+    messages: [] as any[],
+    content: '',
+    currentUser: null as any
+  },
+
+  onShow() {
+    this.setData({ currentUser: getCurrentUser() });
+    this.loadData();
+  },
+
+  loadData() {
+    const rawList = getMessages();
+    const list = rawList.map(msg => ({
+      ...msg,
+      timeStr: formatTime(new Date(msg.createTime)),
+      replies: (msg.replies || []).map((r: any) => ({
+        ...r,
+        timeStr: formatTime(new Date(r.createTime))
+      }))
+    }));
+    this.setData({ messages: list });
+  },
+
+  onInput(e: any) {
+    this.setData({ content: e.detail.value });
+  },
+
+  // 发送留言
+  handleSend() {
+    if (!this.data.content.trim()) return;
+    try {
+      addMessage(this.data.content);
+      this.setData({ content: '' });  
+      this.loadData();
+      wx.showToast({ title: '已发送', icon: 'none' });
+    } catch (e: any) {
+      wx.showToast({ title: e.message, icon: 'none' });
+    } 
+  },
+
+  // 删除留言 (根留言或回复)
+  handleDelete(e: any) { 
+    const id = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '提示',
+      content: '确定删除吗？',
+      success: (res) => {
+        if (res.confirm) {
+          try {
+            deleteMessage(id);
+            this.loadData();
+          } catch (e: any) {
+            wx.showToast({ title: e.message, icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
+  // 回复留言
+  handleReply(e: any) {
+    const parentId = e.currentTarget.dataset.id;
+    const replyToUser = e.currentTarget.dataset.user;
+    
+    wx.showModal({
+      title: `回复 ${replyToUser}`,
+      editable: true,
+      placeholderText: '请输入回复内容',
+      success: (res) => {
+        if (res.confirm && res.content) {
+          try {
+            // 调用统一的 addMessage 接口，传入 parentId
+            addMessage(res.content, parentId);
+            this.loadData();
+          } catch (e: any) {
+            wx.showToast({ title: e.message, icon: 'none' });
+          }
+        }
+      }
+    });
+  }
+});

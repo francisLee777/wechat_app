@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="title">创建我的家庭</view>
+  <view class="input-group">
+    <text>家庭名称：</text>
+    <input 
+      placeholder="例如：快乐一家人" 
+      value="{{familyName}}" 
+      bindinput="onNameInput"
+    />
+  </view>
+  <button class="btn-submit" bindtap="handleCreate">立即创建</button>
+</view>
