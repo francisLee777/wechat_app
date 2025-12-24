@@ -1,39 +1,49 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 	"net/http"
 	"wxcloudrun-golang/db"
 	"wxcloudrun-golang/db/model"
 	"wxcloudrun-golang/util"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
-// GetUserInfo 获取用户信息： 目前是用户手动输入的昵称和头像
-func GetUserInfo(w http.ResponseWriter, r *http.Request) {
-	openId, err := util.GetOpenIdFromHeader(r)
+// GetUserInfo
+// 方法/路径：GET /api/user/getUserInfo
+// 鉴权：需 JWT
+// 返回：UserInfoDBModel（包含 openId、user_nickName、user_icon_url、family_id、role 等）
+func GetUserInfo(_ context.Context, c *app.RequestContext) {
+	openId, err := util.GetOpenId(c)
 	if err != nil {
-		_, _ = fmt.Fprint(w, "没有登录", err)
+		c.String(http.StatusOK, fmt.Sprintf("没有登录%v", err))
 		return
 	}
 	q1 := db.DB.UserInfoDBModel
 	userInfo, err := q1.Where(q1.OpenID.Eq(openId)).First()
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		_, _ = fmt.Fprint(w, "数据库错误", err)
+		c.String(http.StatusOK, fmt.Sprintf("数据库错误%v", err))
 		return
 	}
 	// 查不到时 userInfo 为空
-	util.ReturnSuccessJSON(w, userInfo)
+	util.ReturnSuccessJSON(c, userInfo)
 }
 
-// SaveNickName 保存用户昵称
-func SaveNickName(w http.ResponseWriter, r *http.Request) {
+// SaveNickName
+// 方法/路径：POST /api/user/saveNickName
+// 鉴权：需 JWT
+// 请求：{ nickName: string }
+// 返回：{ nickName: string }
+func SaveNickName(_ context.Context, c *app.RequestContext) {
 	// 获取用户 OpenID
-	openId, err := util.GetOpenIdFromHeader(r)
+	openId, err := util.GetOpenId(c)
 	if err != nil {
-		util.ReturnErrorJSON(w, "未登录", err)
+		util.ReturnErrorJSON(c, "未登录", err)
 		return
 	}
 
@@ -41,14 +51,14 @@ func SaveNickName(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		NickName string `json:"nickName"`
 	}
-	if err = util.BindJson(r, &req); err != nil {
-		util.ReturnErrorJSON(w, "请求参数解析失败", err)
+	if err = util.BindJson(c, &req); err != nil {
+		util.ReturnErrorJSON(c, "请求参数解析失败", err)
 		return
 	}
 
 	// 参数验证
 	if req.NickName == "" {
-		util.ReturnErrorJSON(w, "昵称不能为空", nil)
+		util.ReturnErrorJSON(c, "昵称不能为空", nil)
 		return
 	}
 
@@ -64,35 +74,47 @@ func SaveNickName(w http.ResponseWriter, r *http.Request) {
 	}).Create(userInfo)
 
 	if err != nil {
-		util.ReturnErrorJSON(w, "保存昵称失败", err)
+		util.ReturnErrorJSON(c, "保存昵称失败", err)
 		return
 	}
 
-	util.ReturnSuccessJSON(w, map[string]interface{}{
+	// 同步更新其他模块
+	SyncUserProfile(openId, SyncTypeNickName, req.NickName)
+
+	util.ReturnSuccessJSON(c, map[string]interface{}{
 		"nickName": req.NickName,
 	})
 }
 
-// SaveIconURL 保存用户头像链接
-func SaveIconURL(w http.ResponseWriter, r *http.Request) {
-	openId, err := util.GetOpenIdFromHeader(r)
+// SaveIconURL
+// 方法/路径：POST /api/user/saveIconURL
+// 鉴权：需 JWT
+// 请求：Query 参数 iconURL
+// 返回：string（保存的头像 URL）
+func SaveIconURL(_ context.Context, c *app.RequestContext) {
+	openId, err := util.GetOpenId(c)
 	if err != nil {
-		_, _ = fmt.Fprint(w, "没有登录", err)
+		c.String(http.StatusOK, fmt.Sprintf("没有登录%v", err))
 		return
 	}
-	iconURL := r.URL.Query().Get("iconURL")
+	iconURL := c.Query("iconURL")
 	if iconURL == "" {
-		_, _ = fmt.Fprint(w, "入参iconURL缺失")
+		c.String(http.StatusOK, "入参iconURL缺失")
 		return
 	}
+
 	q1 := db.DB.UserInfoDBModel
 	if err = q1.Clauses(clause.OnConflict{DoUpdates: clause.AssignmentColumns([]string{q1.UserIconURL.ColumnName().String()})}).
 		Create(&model.UserInfoDBModel{
 			OpenID:      openId,
 			UserIconURL: iconURL,
 		}); err != nil {
-		_, _ = fmt.Fprint(w, "数据库错误", err)
+		c.String(http.StatusOK, fmt.Sprintf("数据库错误%v", err))
 		return
 	}
-	util.ReturnSuccessJSON(w, iconURL)
+
+	// 同步更新其他模块
+	SyncUserProfile(openId, SyncTypeAvatar, iconURL)
+
+	util.ReturnSuccessJSON(c, iconURL)
 }

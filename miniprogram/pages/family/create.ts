@@ -1,4 +1,4 @@
-import { createFamily } from '../../utils/db';
+import { createFamily } from '../../api/family';
 
 Page({
   data: {
@@ -30,8 +30,8 @@ Page({
       
       // 延迟返回首页
       setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
+        wx.switchTab({ url: '/pages/index/index' });
+      });
     } catch (error: any) {
       wx.showToast({ title: error.message, icon: 'none' });
     }

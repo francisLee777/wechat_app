@@ -17,20 +17,29 @@ import (
 
 var (
 	Q               = new(Query)
-	OrderDBModel    *orderDBModel
+	FamilyDBModel   *familyDBModel
+	MenuDBModel     *menuDBModel
+	MessageDBModel  *messageDBModel
+	RecipeDBModel   *recipeDBModel
 	UserInfoDBModel *userInfoDBModel
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	OrderDBModel = &Q.OrderDBModel
+	FamilyDBModel = &Q.FamilyDBModel
+	MenuDBModel = &Q.MenuDBModel
+	MessageDBModel = &Q.MessageDBModel
+	RecipeDBModel = &Q.RecipeDBModel
 	UserInfoDBModel = &Q.UserInfoDBModel
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:              db,
-		OrderDBModel:    newOrderDBModel(db, opts...),
+		FamilyDBModel:   newFamilyDBModel(db, opts...),
+		MenuDBModel:     newMenuDBModel(db, opts...),
+		MessageDBModel:  newMessageDBModel(db, opts...),
+		RecipeDBModel:   newRecipeDBModel(db, opts...),
 		UserInfoDBModel: newUserInfoDBModel(db, opts...),
 	}
 }
@@ -38,7 +47,10 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
-	OrderDBModel    orderDBModel
+	FamilyDBModel   familyDBModel
+	MenuDBModel     menuDBModel
+	MessageDBModel  messageDBModel
+	RecipeDBModel   recipeDBModel
 	UserInfoDBModel userInfoDBModel
 }
 
@@ -47,7 +59,10 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
-		OrderDBModel:    q.OrderDBModel.clone(db),
+		FamilyDBModel:   q.FamilyDBModel.clone(db),
+		MenuDBModel:     q.MenuDBModel.clone(db),
+		MessageDBModel:  q.MessageDBModel.clone(db),
+		RecipeDBModel:   q.RecipeDBModel.clone(db),
 		UserInfoDBModel: q.UserInfoDBModel.clone(db),
 	}
 }
@@ -63,19 +78,28 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:              db,
-		OrderDBModel:    q.OrderDBModel.replaceDB(db),
+		FamilyDBModel:   q.FamilyDBModel.replaceDB(db),
+		MenuDBModel:     q.MenuDBModel.replaceDB(db),
+		MessageDBModel:  q.MessageDBModel.replaceDB(db),
+		RecipeDBModel:   q.RecipeDBModel.replaceDB(db),
 		UserInfoDBModel: q.UserInfoDBModel.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	OrderDBModel    IOrderDBModelDo
+	FamilyDBModel   IFamilyDBModelDo
+	MenuDBModel     IMenuDBModelDo
+	MessageDBModel  IMessageDBModelDo
+	RecipeDBModel   IRecipeDBModelDo
 	UserInfoDBModel IUserInfoDBModelDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		OrderDBModel:    q.OrderDBModel.WithContext(ctx),
+		FamilyDBModel:   q.FamilyDBModel.WithContext(ctx),
+		MenuDBModel:     q.MenuDBModel.WithContext(ctx),
+		MessageDBModel:  q.MessageDBModel.WithContext(ctx),
+		RecipeDBModel:   q.RecipeDBModel.WithContext(ctx),
 		UserInfoDBModel: q.UserInfoDBModel.WithContext(ctx),
 	}
 }

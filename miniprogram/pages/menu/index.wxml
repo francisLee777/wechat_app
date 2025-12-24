@@ -1,0 +1,170 @@
+<wxs src="../../utils/tools.wxs" module="tools" />
+<view class="container">
+  <view class="date-nav">
+    <view class="nav-btn" bindtap="prevChunk">前3天</view>
+    <view class="current-date">
+      <picker mode="date" value="{{baseDate}}" bindchange="onBaseDateChange">
+        <view class="date-text">起始：{{baseDate}} ▾</view>
+      </picker>
+    </view>
+    <view class="nav-btn" bindtap="nextChunk">后3天</view>
+  </view>
+
+  <scroll-view scroll-y class="menu-list">
+    <block wx:for="{{days}}" wx:for-item="day" wx:for-index="didx" wx:key="date">
+      <view class="day-module">
+        <view class="day-header">
+          <text class="day-title">{{day.label}} · {{day.date}} · {{day.weekDay}}</text>
+        </view>
+
+        <!-- 早餐 -->
+        <view class="meal-section {{day.menu.breakfast.length ? '' : 'empty'}}">
+          <view class="section-header">
+            <text class="meal-title">早餐 Breakfast</text>
+            <view class="add-btn" bindtap="openAddModal" data-type="1" data-date="{{day.date}}">+</view>
+          </view>
+          <view class="dish-list" wx:if="{{day.menu.breakfast.length > 0}}">
+            <view class="swipe-cell" wx:for="{{day.menu.breakfast}}" wx:key="id">
+              <view 
+                class="dish-item" 
+                style="left: {{day.swipeXBreakfast[index]}}px;"
+                catchtouchstart="handleDishTouchStart"
+                catchtouchmove="handleDishTouchMove"
+                catchtouchend="handleDishTouchEnd"
+                data-dayindex="{{didx}}"
+                data-section="breakfast"
+                data-index="{{index}}"
+              >
+                <image class="dish-img" src="{{item.recipeImg ? tools.resolveUrl(item.recipeImg, token) : '/assets/images/tab_recipe.png'}}" mode="aspectFill"></image>
+                <view class="dish-info">
+                  <view class="dish-name">{{item.recipeName}}</view>
+                  <view class="dish-meta">
+                    <image class="user-avatar" src="{{item.userAvatar ? tools.resolveUrl(item.userAvatar, token) : '/assets/images/default-avatar.png'}}"></image>
+                    <text class="user-name">无备注</text>
+                  </view>
+                  <view class="dish-remark" wx:if="{{item.remark}}">备注：{{item.remark}}</view>
+                </view>
+              </view>
+              <view class="swipe-action" bindtap="deleteDish" data-id="{{item.id}}">删除</view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 午餐 -->
+        <view class="meal-section {{day.menu.lunch.length ? '' : 'empty'}}">
+          <view class="section-header">
+            <text class="meal-title">午餐 Lunch</text>
+            <view class="add-btn" bindtap="openAddModal" data-type="2" data-date="{{day.date}}">+</view>
+          </view>
+          <view class="dish-list" wx:if="{{day.menu.lunch.length > 0}}">
+            <view class="swipe-cell" wx:for="{{day.menu.lunch}}" wx:key="id">
+              <view 
+                class="dish-item" 
+                style="left: {{day.swipeXLunch[index]}}px;"
+                catchtouchstart="handleDishTouchStart"
+                catchtouchmove="handleDishTouchMove"
+                catchtouchend="handleDishTouchEnd"
+                data-dayindex="{{didx}}"
+                data-section="lunch"
+                data-index="{{index}}"
+              >
+                <image class="dish-img" src="{{item.recipeImg ? tools.resolveUrl(item.recipeImg, token) : '/assets/images/tab_recipe.png'}}" mode="aspectFill"></image>
+                <view class="dish-info">
+                  <view class="dish-name">{{item.recipeName}}</view>
+                  <view class="dish-meta">
+                    <image class="user-avatar" src="{{item.userAvatar ? tools.resolveUrl(item.userAvatar, token) : '/assets/images/default-avatar.png'}}"></image>
+                    <text class="user-name">无备注</text>
+                  </view>
+                  <view class="dish-remark" wx:if="{{item.remark}}">备注：{{item.remark}}</view>
+                </view>
+              </view>
+              <view class="swipe-action" bindtap="deleteDish" data-id="{{item.id}}">删除</view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 晚餐 -->
+        <view class="meal-section {{day.menu.dinner.length ? '' : 'empty'}}">
+          <view class="section-header">
+            <text class="meal-title">晚餐 Dinner</text>
+            <view class="add-btn" bindtap="openAddModal" data-type="3" data-date="{{day.date}}">+</view>
+          </view>
+          <view class="dish-list" wx:if="{{day.menu.dinner.length > 0}}">
+            <view class="swipe-cell" wx:for="{{day.menu.dinner}}" wx:key="id">
+              <view 
+                class="dish-item" 
+                style="left: {{day.swipeXDinner[index]}}px;"
+                catchtouchstart="handleDishTouchStart"
+                catchtouchmove="handleDishTouchMove"
+                catchtouchend="handleDishTouchEnd"
+                data-dayindex="{{didx}}"
+                data-section="dinner"
+                data-index="{{index}}"
+              >
+                <image class="dish-img" src="{{item.recipeImg ? tools.resolveUrl(item.recipeImg, token) : '/assets/images/tab_recipe.png'}}" mode="aspectFill"></image>
+                <view class="dish-info">
+                  <view class="dish-name">{{item.recipeName}}</view>
+                  <view class="dish-meta">
+                    <image class="user-avatar" src="{{item.userAvatar ? tools.resolveUrl(item.userAvatar, token) : '/assets/images/default-avatar.png'}}"></image>
+                    <text class="user-name">无备注</text>
+                  </view>
+                  <view class="dish-remark" wx:if="{{item.remark}}">备注：{{item.remark}}</view>
+                </view>
+              </view>
+              <view class="swipe-action" bindtap="deleteDish" data-id="{{item.id}}">删除</view>
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </block>
+
+    <view class="footer-spacer"></view>
+  </scroll-view>
+
+  <!-- 选菜弹窗 -->
+  <page-container 
+    show="{{showAddModal}}" 
+    position="bottom" 
+    round
+    bind:clickoverlay="closeAddModal"
+  >
+    <view class="add-modal">
+      <view class="modal-header">
+        <text>添加{{currentMealName}}</text>
+        <view class="close-btn" bindtap="closeAddModal">关闭</view>
+      </view>
+      
+      <view class="search-bar">
+        <input class="search-input" placeholder="搜索食谱..." value="{{keyword}}" bindinput="onSearchInput" />
+      </view>
+
+      <scroll-view scroll-y class="recipe-list">
+        <view 
+          class="recipe-item {{tools.includes(selectedRecipeIds, item.id) ? 'selected' : ''}}" 
+          wx:for="{{recipes}}" 
+          wx:key="id"
+          bindtap="selectRecipe"
+          data-id="{{item.id}}"
+        >
+          <image class="recipe-thumb" src="{{item.images[0] ? tools.resolveUrl(item.images[0], token) : '/assets/images/tab_recipe.png'}}" mode="aspectFill"></image>
+          <view class="recipe-info">
+            <view class="recipe-name">{{item.name}}</view>
+          </view>
+          <view class="checkbox {{tools.includes(selectedRecipeIds, item.id) ? 'checked' : ''}}">
+            <icon type="success_no_circle" size="14" color="#fff" wx:if="{{tools.includes(selectedRecipeIds, item.id)}}"/>
+          </view>
+        </view>
+        <view class="empty-list" wx:if="{{recipes.length === 0}}">没有找到食谱</view>
+      </scroll-view>
+
+      <view class="remark-input-area" wx:if="{{selectedRecipeIds.length > 0}}">
+        <input class="remark-input" placeholder="添加备注（选填，如：少辣）" value="{{remark}}" bindinput="onRemarkInput" />
+      </view>
+
+      <view class="modal-footer">
+        <button class="confirm-btn" bindtap="confirmAdd" disabled="{{selectedRecipeIds.length === 0}}">确认添加{{selectedRecipeIds.length > 0 ? ' (' + selectedRecipeIds.length + ')' : ''}}</button>
+      </view>
+    </view>
+  </page-container>
+</view>

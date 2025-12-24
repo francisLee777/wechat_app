@@ -1,12 +1,13 @@
 package util
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/bytedance/sonic"
 	"math/rand"
 	"net/http"
 	"strings"
+
+	"github.com/bytedance/sonic"
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 // JsonResult 返回结构
@@ -16,33 +17,30 @@ type JsonResult struct {
 	Data     interface{} `json:"data"`
 }
 
-func BindJson(r *http.Request, ptr interface{}) error {
-	decoder := json.NewDecoder(r.Body)
-	defer r.Body.Close()
-	return decoder.Decode(ptr)
+func BindJson(c *app.RequestContext, ptr interface{}) error {
+	return c.Bind(ptr)
 }
 
-// GetOpenIdFromHeader 从Header里面获取微信 openId
-func GetOpenIdFromHeader(r *http.Request) (string, error) {
-	openId := r.Header.Get("X-Wx-Openid")
-	if openId == "" {
-		return "", fmt.Errorf("缺少openId")
+// GetOpenId 获取用户 OpenID (仅从 JWT 中间件设置的 Context 中获取)
+func GetOpenId(c *app.RequestContext) (string, error) {
+	// 从 Context 获取 OpenID (由 JWT 中间件设置)
+	if value, exists := c.Get("openid"); exists {
+		if openId, ok := value.(string); ok {
+			return openId, nil
+		}
 	}
-	return openId, nil
+	// 不再支持从 Header 获取 OpenID，仅使用 JWT
+	return "", fmt.Errorf("未登录或缺少有效凭证")
 }
 
 // ReturnSuccessJSON 向resp中注入json返回值
-func ReturnSuccessJSON(w http.ResponseWriter, res interface{}) {
-	w.Header().Set("content-type", "application/json")
-	marshal, _ := json.Marshal(JsonResult{Data: res})
-	_, _ = w.Write(marshal)
+func ReturnSuccessJSON(c *app.RequestContext, res interface{}) {
+	c.JSON(http.StatusOK, JsonResult{Data: res})
 }
 
 // ReturnErrorJSON 向 resp 中注入 errorMsg 返回值
-func ReturnErrorJSON(w http.ResponseWriter, msg string, err error) {
-	w.Header().Set("content-type", "application/json")
-	marshal, _ := json.Marshal(JsonResult{Code: -1, ErrorMsg: fmt.Sprintf("msg %s, error = %v", msg, err)})
-	_, _ = w.Write(marshal)
+func ReturnErrorJSON(c *app.RequestContext, msg string, err error) {
+	c.PureJSON(http.StatusInternalServerError, JsonResult{Code: -1, ErrorMsg: fmt.Sprintf("msg %s, error = %v", msg, err)})
 }
 
 // GenerateUUID 生成 UUID

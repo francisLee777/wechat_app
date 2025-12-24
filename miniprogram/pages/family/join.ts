@@ -1,4 +1,4 @@
-import { joinFamily } from '../../utils/db';
+import { joinFamily } from '../../api/family';
 
 Page({
   data: {
@@ -23,8 +23,8 @@ Page({
       wx.showToast({ title: `成功加入: ${family.name}`, icon: 'success' });
       
       setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
+        wx.switchTab({ url: '/pages/index/index' });
+      });
     } catch (error: any) {
       wx.showToast({ title: error.message, icon: 'none' });
     }

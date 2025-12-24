@@ -15,16 +15,20 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    ports:
+      - "3306:3306"
 
   my_golang_app:
     build:
       context: .
       dockerfile: Dockerfile
-
-    #    volumes:
-    #      - ./:/app
     expose:
       - "8080"  # 只在 Docker 网络内暴露端口，外部无法访问。容器间通信使用的是下面的 web222
+    networks:
+      - web222  # 容器间通信需要在同一网络
+    volumes:
+      - ./data/user_data:/app/data/user_data
+      - ./assets:/app/assets
     environment:
       - DB_HOST=db
       - DB_USER=root
@@ -35,9 +39,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
-    networks:
-      - web222  # 容器间通信需要在同一网络
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
     command: [ "/app/main" ]  # 在 Dockerfile 里写 CMD ["/app/main"] 一样的
 
   nginx-proxy-manager:

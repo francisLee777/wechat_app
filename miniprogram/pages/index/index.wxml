@@ -1,48 +1,118 @@
+<wxs src="../../utils/tools.wxs" module="tools" />
+
+<!-- 全屏 Movable Area 用于悬浮按钮拖拽 -->
+<!-- pointer-events: none 确保不阻挡下方列表的滚动和点击 -->
+<movable-area class="fab-movable-area">
+  <!-- 悬浮按钮组 -->
+  <!-- pointer-events: auto 确保按钮本身可点击和拖拽 -->
+  <movable-view 
+    class="fab-movable-view" 
+    direction="all" 
+    x="{{fabX}}" 
+    y="{{fabY}}" 
+    out-of-bounds="{{true}}"
+    wx:if="{{isAdmin}}"
+  >
+    <view class="fab-container">
+      <!-- 导入模版按钮 (胶囊形状) -->
+      <view class="fab-pill" bindtap="goToAddTemplate">
+        <text class="pill-icon">📑</text>
+        <text class="pill-text">导入模版</text>
+      </view>
+      
+      <!-- 新建按钮 (圆形) -->
+      <view class="fab-circle" bindtap="goToAdd">
+        <text class="circle-icon">+</text>
+      </view>
+    </view>
+  </movable-view>
+</movable-area>
+
 <view class="container">
-  <block wx:if="{{isLoggedIn}}">
-    <!-- 用户信息区域 -->
-    <view class="user-info">
-      <view class="avatar">
-        <open-data type="userAvatarUrl"></open-data>
-      </view>
-      <view class="nickname">
-        <text>你好，</text>
-        <open-data type="userNickName"></open-data>
-      </view>
-      <view class="user-id" bindtap="copyUserId">ID: {{user.id}} (点击复制)</view>
-    </view>
-
-    <!-- 未加入家庭：显示入口 -->
-    <view class="no-family-section" wx:if="{{!hasFamily}}">
-      <view class="welcome-text">欢迎来到家庭厨房，请选择：</view>
-      <button class="btn btn-primary" bindtap="goToCreateFamily">创建新家庭 (我是家长)</button>
-      <button class="btn btn-secondary" bindtap="goToJoinFamily">加入现有家庭 (我是成员)</button>
-    </view>
-
-    <!-- 已加入家庭：显示功能菜单 -->
-    <view class="dashboard-section" wx:else>
-      <view class="menu-grid">
-        <view class="menu-item" bindtap="goToRecipes">
-          <view class="icon">📖</view>
-          <text>家庭食谱</text>
-        </view>
-        <view class="menu-item" bindtap="goToMessages">
-          <view class="icon">📝</view>
-          <text>留言板</text>
-        </view>
-        <view class="menu-item" bindtap="goToManage">
-          <view class="icon">👨‍👩‍👧‍👦</view>
-          <text>家庭管理</text>
-        </view>
-      </view>
-    </view>
-  </block>
-
-  <!-- 未登录状态 -->
-  <view class="login-container" wx:else>
-    <view class="login-icon">🔒</view>
-    <view class="login-tip">请登录</view>
-    <view class="login-desc">登录后使用家庭厨房功能</view>
-    <button class="btn btn-primary login-btn" bindtap="handleLogin">登录</button>
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input placeholder="搜索食谱..." bindinput="onSearchInput" value="{{keyword}}" />
   </view>
+
+  <!-- 食谱列表 (垂直布局) -->
+  <view class="recipe-list">
+    <block wx:for="{{recipes}}" wx:key="id">
+      <view class="swipe-cell">
+        <view 
+          class="recipe-item" 
+          style="{{listStyles[index]}}; left: {{swipeXList[index]}}px;"
+          bindtap="goToDetail" 
+          data-id="{{item.id}}"
+          catchtouchstart="handleItemTouchStart"
+          catchtouchmove="handleItemTouchMove"
+          catchtouchend="handleItemTouchEnd"
+          data-index="{{index}}"
+        >
+          <!-- 左侧图片（无图则不加载） -->
+          <block wx:if="{{item.images && item.images.length > 0}}">
+            <image 
+              class="recipe-img" 
+              src="{{tools.resolveUrl(item.images[0], token)}}" 
+              mode="aspectFill"
+            ></image>
+          </block>
+          <block wx:else>
+            <view class="recipe-img"></view>
+          </block>
+          
+          <!-- 中间内容 -->
+          <view class="recipe-info">
+            <text class="recipe-name">{{item.name}}</text>
+            <text class="recipe-desc">{{item.content}}</text>
+          </view>
+
+          <!-- 拖拽手柄 (仅家长可见) -->
+          <view 
+            class="drag-handle" 
+            catchtouchstart="handleDragStart" 
+            catchtouchmove="handleDragMove" 
+            catchtouchend="handleDragEnd"
+            data-index="{{index}}"
+            wx:if="{{isAdmin && !keyword && swipeXList[index] == 0}}"
+          >
+            <view class="drag-icon">☰</view>
+          </view>
+        </view>
+        <view class="swipe-action" wx:if="{{isAdmin}}" bindtap="deleteRecipeQuick" data-id="{{item.id}}" data-name="{{item.name}}">删除</view>
+      </view>
+    </block>
+    <view wx:if="{{recipes.length === 0}}" class="empty-tip">暂无食谱</view>
+  </view>
+
+  <!-- 模版选择弹窗 -->
+  <page-container 
+    show="{{showTemplateModal}}" 
+    round
+    position="bottom"
+    bind:clickoverlay="closeTemplateModal"
+    custom-style="height: 70vh; background-color: #f7f7f7;"
+  >
+    <view class="template-modal">
+      <view class="modal-header">
+        <text class="modal-title">选择菜谱模版</text>
+        <view class="close-btn" bindtap="closeTemplateModal">×</view>
+      </view>
+      <scroll-view scroll-y class="template-list">
+        <block wx:for="{{templates}}" wx:key="id">
+          <view class="template-item" bindtap="selectTemplate" data-index="{{index}}">
+             <image 
+              class="tpl-img" 
+              src="{{tools.resolveUrl(item.images[0], token)}}" 
+              mode="aspectFill"
+            ></image>
+            <view class="tpl-info">
+              <text class="tpl-name">{{item.name}}</text>
+              <text class="tpl-desc">{{item.content}}</text>
+            </view>
+            <view class="tpl-action">使用</view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+  </page-container>
 </view>

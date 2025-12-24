@@ -58,16 +58,12 @@
   align-items: center;
 }
 
-.avatar-placeholder {
+.member-avatar {
   width: 40px;
   height: 40px;
-  background-color: #eee;
   border-radius: 50%;
-  text-align: center;
-  line-height: 40px;
   margin-right: 15px;
-  font-size: 18px;
-  color: #666;
+  background-color: #f0f0f0;
 }
 
 .member-detail {
@@ -94,4 +90,54 @@
   background-color: #f8f8f8;
   color: #fa5151;
   border: 1px solid #ddd;
+}
+
+/* Empty State */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  padding: 0 30px;
+}
+
+.empty-img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #07c160;
+  color: white;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 25px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 25px;
+  font-size: 16px;
+  width: 100%;
 }

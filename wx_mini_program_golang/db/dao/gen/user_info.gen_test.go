@@ -18,14 +18,14 @@ import (
 
 func init() {
 	InitializeDB()
-	err := db.AutoMigrate(&model.UserInfoDBModel{})
+	err := _gen_test_db.AutoMigrate(&model.UserInfoDBModel{})
 	if err != nil {
 		fmt.Printf("Error: AutoMigrate(&model.UserInfoDBModel{}) fail: %s", err)
 	}
 }
 
 func Test_userInfoDBModelQuery(t *testing.T) {
-	userInfoDBModel := newUserInfoDBModel(db)
+	userInfoDBModel := newUserInfoDBModel(_gen_test_db)
 	userInfoDBModel = *userInfoDBModel.As(userInfoDBModel.TableName())
 	_do := userInfoDBModel.WithContext(context.Background()).Debug()
 
@@ -127,7 +127,7 @@ func Test_userInfoDBModelQuery(t *testing.T) {
 	}
 
 	var _a _another
-	var _aPK = field.NewString(_a.TableName(), clause.PrimaryKey)
+	var _aPK = field.NewString(_a.TableName(), "id")
 
 	err = _do.Join(&_a, primaryKey.EqCol(_aPK)).Scan(map[string]interface{}{})
 	if err != nil {

@@ -1,4 +1,6 @@
-import { getMessages, addMessage, deleteMessage, getCurrentUser, Message } from '../../utils/db';
+import { getMessages, addMessage, deleteMessage } from '../../api/message';
+import { getCurrentUser } from '../../api/auth';
+import type { Message } from '../../models/index';
 import { formatTime } from '../../utils/util';
 
 Page({
@@ -9,8 +11,14 @@ Page({
   },
 
   onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 2 });
+    }
+    wx.showTabBar({});
     this.setData({ currentUser: getCurrentUser() });
     this.loadData();
+    const token = wx.getStorageSync('AUTH_TOKEN');
+    this.setData({ token });
   },
 
   async loadData() {
@@ -75,7 +83,7 @@ Page({
       title: `回复 ${replyToUser}`,
       editable: true,
       placeholderText: '请输入回复内容',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm && res.content) {
           if (res.content.length > 100) {
             wx.showToast({ title: '回复内容不能超过100字', icon: 'none' });
@@ -83,7 +91,7 @@ Page({
           }
           try {
             // 调用统一的 addMessage 接口，传入 parentId
-            addMessage(res.content, parentId);
+            await addMessage(res.content, parentId);
             this.loadData();
           } catch (e: any) {
             wx.showToast({ title: e.message, icon: 'none' });

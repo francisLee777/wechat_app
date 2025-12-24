@@ -1,0 +1,360 @@
+page {
+  background-color: #f7f7f7;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 日期导航 */
+.date-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-btn {
+  font-size: 14px;
+  color: #666;
+  padding: 5px 10px;
+}
+
+.current-date {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-text {
+  display: flex;
+  align-items: center;
+}
+
+/* 菜单列表 */
+.menu-list {
+  flex: 1;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.days-header {
+  padding: 10px 15px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.days-title {
+  font-size: 14px;
+  color: #666;
+}
+
+.day-module {
+  margin-bottom: 10px;
+}
+
+.day-header {
+  padding: 6px 6px 0 6px;
+}
+
+.day-title {
+  font-size: 13px;
+  color: #888;
+}
+
+.meal-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.meal-section.empty {
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.meal-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.add-btn {
+  width: 24px;
+  height: 24px;
+  background-color: #07c160;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(7, 193, 96, 0.25);
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 20px 0;
+  border: 1px dashed #eee;
+  border-radius: 8px;
+}
+
+/* 菜品项 */
+.dish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.swipe-cell {
+  position: relative;
+  height: 68px;
+  overflow: hidden;
+}
+
+.dish-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #fcfcfc;
+  padding: 8px;
+  border-radius: 8px;
+  position: relative;
+  transition: left 0.1s;
+  z-index: 1;
+  height: 68px; /* 保持与容器一致，避免未填满时露出右侧按钮 */
+  box-sizing: border-box; /* 高度包含内边距 */
+}
+
+.dish-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  margin-right: 10px;
+  background-color: #eee;
+}
+
+.dish-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dish-name {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.dish-meta {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.user-name {
+  font-size: 12px;
+  color: #999;
+}
+
+.dish-remark {
+  font-size: 11px;
+  color: #ff9800;
+  margin-top: 2px;
+  background-color: #fff3e0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.dish-action {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 18px;
+}
+
+.swipe-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 68px;
+  width: 80px;
+  background-color: #fa5151;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: 0;
+}
+
+.footer-spacer {
+  height: 24px;
+}
+
+/* 弹窗样式 */
+.add-modal {
+  background-color: #fff;
+  border-radius: 16px 16px 0 0;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.modal-header {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.close-btn {
+  color: #999;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.search-bar {
+  padding: 10px 15px;
+  background-color: #f7f7f7;
+}
+
+.search-input {
+  background-color: #fff;
+  height: 36px;
+  border-radius: 18px;
+  padding: 0 15px;
+  font-size: 14px;
+}
+
+.recipe-list {
+  flex: 1;
+  padding: 0 15px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.recipe-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.recipe-item.selected {
+  /* background-color: #f0fdf4; */
+}
+
+.recipe-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 12px;
+  background-color: #eee;
+  flex-shrink: 0;
+}
+
+.recipe-info {
+  flex: 1;
+  min-width: 0; /* 防止内容撑开 */
+  margin-right: 10px;
+}
+
+.recipe-name {
+  font-size: 15px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.checkbox.checked {
+  background-color: #07c160;
+  border-color: #07c160;
+}
+
+.empty-list {
+  text-align: center;
+  color: #999;
+  padding: 30px 0;
+}
+
+.remark-input-area {
+  padding: 10px 15px;
+  border-top: 1px solid #eee;
+}
+
+.remark-input {
+  background-color: #f7f7f7;
+  height: 40px;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.modal-footer {
+  padding: 10px 15px;
+  border-top: 1px solid #eee;
+}
+
+.confirm-btn {
+  background-color: #07c160;
+  color: #fff;
+  border-radius: 22px;
+  font-size: 16px;
+}
+
+.confirm-btn[disabled] {
+  background-color: #a5d6b8;
+  color: #fff;
+}

@@ -1,4 +1,5 @@
-<view class="container">
+<wxs src="../../utils/tools.wxs" module="tools" />
+<view class="container" wx:if="{{family}}">
   <!-- 家庭信息 -->
   <view class="family-card">
     <view class="family-name">{{family.name}}</view>
@@ -13,7 +14,11 @@
   <view class="member-list">
     <view class="member-item" wx:for="{{members}}" wx:key="id">
       <view class="member-info">
-        <view class="avatar-placeholder">{{item.nickName[0]}}</view>
+        <image 
+          class="member-avatar" 
+          src="{{item.avatarUrl ? tools.resolveUrl(item.avatarUrl, token) : '/assets/images/default_avatar.png'}}" 
+          mode="aspectFill"
+        ></image>
         <view class="member-detail">
           <text class="member-name">
             {{item.nickName}}
@@ -33,5 +38,16 @@
   <!-- 底部操作 -->
   <view class="footer-action">
     <button class="btn-quit" bindtap="handleQuit" wx:if="{{currentUser.role !== 'admin'}}">退出家庭</button>
+    <button class="btn-quit" style="background-color: #ff4d4f; color: white;" bindtap="handleDelete" wx:if="{{currentUser.role === 'admin'}}">解散家庭</button>
+  </view>
+</view>
+
+<!-- 空状态：未加入家庭 -->
+<view class="empty-container" wx:else>
+  <image class="empty-img" src="/assets/images/tab_family.png" mode="aspectFit"></image>
+  <view class="empty-text">您还没有加入任何家庭</view>
+  <view class="empty-actions">
+    <navigator url="/pages/family/create" class="btn-primary">创建新家庭</navigator>
+    <navigator url="/pages/family/join" class="btn-secondary">加入现有家庭</navigator>
   </view>
 </view>

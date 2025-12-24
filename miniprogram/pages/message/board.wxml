@@ -1,9 +1,10 @@
+<wxs src="../../utils/tools.wxs" module="tools" />
 <view class="container">
   <scroll-view scroll-y class="message-list">
     <view class="message-item" wx:for="{{messages}}" wx:key="id">
       <view class="msg-header">
         <view class="user-info">
-          <view class="avatar-placeholder">{{item.userName[0]}}</view>
+          <image class="avatar-img" src="{{item.userAvatar ? tools.resolveUrl(item.userAvatar, token) : '/images/default-avatar.png'}}" mode="aspectFill"></image>
           <view class="info-text">
             <text class="username">{{item.userName}}</text>
             <text class="time">{{item.timeStr}}</text>

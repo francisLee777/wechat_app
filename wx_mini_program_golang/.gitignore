@@ -1,2 +1,6 @@
 .idea
 test.http
+data
+config.json
+wx_mini_program_golang
+wxcloudrun-golang

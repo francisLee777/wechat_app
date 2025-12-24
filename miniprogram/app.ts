@@ -1,5 +1,5 @@
 // app.ts
-import { getCurrentUser, checkSession } from './utils/db';
+import { getCurrentUser, checkSession } from './api/auth';
 
 App<IAppOption>({
   globalData: {},

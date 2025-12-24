@@ -41,7 +41,10 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 # 将构建产物/app/main拷贝到运行时的工作目录中
-COPY --from=builder /app/main /app/index.html /app/config.json /app/
+COPY --from=builder /app/main /app/config.json /app/init.sql /app/
+# Ensure default asset exists by copying from frontend images if present
+
+RUN mkdir -p /app/data/user_data
 
 EXPOSE 8080
 

@@ -28,22 +28,22 @@ type TestCase struct {
 	Expectation
 }
 
-const dbName = "gen_test.db"
+const _gen_test_db_name = "gen_test.db"
 
-var db *gorm.DB
-var once sync.Once
+var _gen_test_db *gorm.DB
+var _gen_test_once sync.Once
 
 func init() {
 	InitializeDB()
-	db.AutoMigrate(&_another{})
+	_gen_test_db.AutoMigrate(&_another{})
 }
 
 func InitializeDB() {
-	once.Do(func() {
+	_gen_test_once.Do(func() {
 		var err error
-		db, err = gorm.Open(sqlite.Open(dbName), &gorm.Config{})
+		_gen_test_db, err = gorm.Open(sqlite.Open(_gen_test_db_name), &gorm.Config{})
 		if err != nil {
-			panic(fmt.Errorf("open sqlite %q fail: %w", dbName, err))
+			panic(fmt.Errorf("open sqlite %q fail: %w", _gen_test_db_name, err))
 		}
 	})
 }
@@ -61,15 +61,15 @@ type _another struct {
 func (*_another) TableName() string { return "another_for_unit_test" }
 
 func Test_Available(t *testing.T) {
-	if !Use(db).Available() {
+	if !Use(_gen_test_db).Available() {
 		t.Errorf("query.Available() == false")
 	}
 }
 
 func Test_WithContext(t *testing.T) {
-	query := Use(db)
+	query := Use(_gen_test_db)
 	if !query.Available() {
-		t.Errorf("query Use(db) fail: query.Available() == false")
+		t.Errorf("query Use(_gen_test_db) fail: query.Available() == false")
 	}
 
 	type Content string
@@ -77,7 +77,10 @@ func Test_WithContext(t *testing.T) {
 	qCtx := query.WithContext(context.WithValue(context.Background(), key, value))
 
 	for _, ctx := range []context.Context{
-		qCtx.OrderDBModel.UnderlyingDB().Statement.Context,
+		qCtx.FamilyDBModel.UnderlyingDB().Statement.Context,
+		qCtx.MenuDBModel.UnderlyingDB().Statement.Context,
+		qCtx.MessageDBModel.UnderlyingDB().Statement.Context,
+		qCtx.RecipeDBModel.UnderlyingDB().Statement.Context,
 		qCtx.UserInfoDBModel.UnderlyingDB().Statement.Context,
 	} {
 		if v := ctx.Value(key); v != value {
@@ -87,9 +90,9 @@ func Test_WithContext(t *testing.T) {
 }
 
 func Test_Transaction(t *testing.T) {
-	query := Use(db)
+	query := Use(_gen_test_db)
 	if !query.Available() {
-		t.Errorf("query Use(db) fail: query.Available() == false")
+		t.Errorf("query Use(_gen_test_db) fail: query.Available() == false")
 	}
 
 	err := query.Transaction(func(tx *Query) error { return nil })

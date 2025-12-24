@@ -1,0 +1,40 @@
+var BASE_URL = "http://localhost/api";
+
+function resolveUrl(url, token) {
+  if (!url) return "";
+  var fullUrl = url;
+  
+  // 如果是相对路径，拼接域名
+  if (url.indexOf("http") !== 0 && url.indexOf("wxfile") !== 0 && url.indexOf("data:") !== 0) {
+    if (url.indexOf("/") === 0) {
+      fullUrl = BASE_URL + url;
+    } else {
+      fullUrl = BASE_URL + "/" + url;
+    }
+  }
+  // 如果是后端资源的 URL（以 BASE_URL 开头），且提供了 token，则拼接 token
+  if (fullUrl.indexOf(BASE_URL) === 0 && token) {
+    if (fullUrl.indexOf("?token=") === -1 && fullUrl.indexOf("&token=") === -1) {
+      if (fullUrl.indexOf("?") === -1) {
+        return fullUrl + "?token=" + token;
+      } else {
+        return fullUrl + "&token=" + token;
+      }
+    }
+  }
+  
+  return fullUrl;
+}
+
+function includes(arr, item) {
+  if (!arr) return false;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == item) return true;
+  }
+  return false;
+}
+
+module.exports = {
+  resolveUrl: resolveUrl,
+  includes: includes
+}

@@ -1,3 +1,4 @@
+<wxs src="../../utils/tools.wxs" module="tools" />
 <view class="container" wx:if="{{recipe}}">
   <!-- 轮播图展示多张照片 -->
   <view class="swiper-wrapper" wx:if="{{recipe.images.length > 0}}">
@@ -10,7 +11,7 @@
     >
       <block wx:for="{{recipe.images}}" wx:key="*this">
         <swiper-item>
-          <image src="{{item}}" mode="aspectFill" class="swiper-image" bindtap="previewImage" data-current="{{item}}"></image>
+          <image src="{{tools.resolveUrl(item, token)}}" mode="aspectFill" class="swiper-image" bindtap="previewImage" data-current="{{tools.resolveUrl(item, token)}}"></image>
         </swiper-item>
       </block>
     </swiper>
@@ -20,14 +21,21 @@
     </view>
   </view>
   
-  <!-- 无图时的占位 -->
-  <view class="swiper-container no-image" wx:else>
-    <text>暂无成品照片</text>
-  </view>
+  <!-- 无图时不加载图片，展示空白区域 -->
+  <view class="no-image" wx:else></view>
   
   <view class="content-area">
     <view class="header">
       <text class="title">{{recipe.name}}</text>
+      
+      <!-- 创建者信息 -->
+      <view class="creator-info">
+        <image class="creator-avatar" src="{{recipe.creatorAvatar ? tools.resolveUrl(recipe.creatorAvatar, token) : '/images/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="creator-meta">
+          <text class="creator-name">{{recipe.creatorName || '未知用户'}}</text>
+          <text class="create-time" wx:if="{{updateTimeStr}}">{{updateTimeStr}} 更新</text>
+        </view>
+      </view>
     </view>
     
     <view class="section">
@@ -39,6 +47,10 @@
   <!-- 悬浮编辑按钮 -->
   <view class="fab-edit" bindtap="goToEdit" wx:if="{{isAdmin}}">
     <text>✎</text>
+  </view>
+  <!-- 悬浮删除按钮 -->
+  <view class="fab-delete" bindtap="handleDelete" wx:if="{{isAdmin}}">
+    <text>🗑</text>
   </view>
 </view>
 <view wx:else class="error">未找到食谱</view>

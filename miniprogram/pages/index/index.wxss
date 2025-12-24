@@ -1,133 +1,283 @@
-/** index.wxss **/
 .container {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 15px;
+  padding-bottom: 90px;
 }
 
-.user-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 40px;
+.search-bar {
+  margin-bottom: 20px;
 }
 
-.avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+.search-bar input {
+  background-color: #fff;
+  padding: 12px 15px;
+  border-radius: 25px;
+  border: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+/* 垂直列表布局 */
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.swipe-cell {
+  position: relative;
+  height: 100px;
+  margin-bottom: 15px;
+}
+
+.recipe-item {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 10px;
-  border: 2px solid #ddd;
+  /* margin 交由外层 swipe-cell 控制，避免暴露右侧按钮 */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex; /* 改为 flex 布局 */
+  height: 100px;
+  position: relative;
+  transition: left 0.1s;
+  z-index: 1; /* 覆盖下层删除按钮 */
 }
 
-.nickname {
+.swipe-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100px;
+  width: 80px;
+  background-color: #fa5151;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  z-index: 0;
+}
+
+/* 拖拽时的样式 */
+.recipe-item.dragging {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  z-index: 100;
+  opacity: 0.9;
+  transform: scale(1.02);
+  position: relative;
+}
+
+.recipe-img {
+  width: 100px;
+  height: 100px;
+  background-color: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.recipe-info {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.recipe-name {
   font-size: 18px;
   font-weight: bold;
   color: #333;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.user-id {
-  font-size: 12px;
-  color: #999;
-  margin-top: 5px;
-}
-
-/* 未加入家庭区域 */
-.no-family-section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.welcome-text {
-  margin-bottom: 20px;
-  font-size: 16px;
-  color: #666;
-}
-
-.btn {
-  width: 80%;
-  margin-bottom: 15px;
-  border-radius: 25px;
-  font-size: 16px;
-}
-
-.btn-primary {
-  background-color: #07c160;
-  color: white;
-}
-
-.btn-secondary {
-  background-color: #f8f8f8;
-  color: #333;
-  border: 1px solid #ddd;
-}
-
-/* 功能菜单区域 */
-.dashboard-section {
-  width: 100%;
-}
-
-.menu-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.menu-item {
-  width: 40%;
-  background-color: #fff;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.menu-item .icon {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
-
-.menu-item text {
-  font-size: 16px;
-  color: #333;
-}
-
-/* 登录区域 */
-.login-container {
-  width: 100%;
-  height: 60vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-icon {
-  font-size: 60px;
-  margin-bottom: 20px;
-}
-
-.login-tip {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.login-desc {
+.recipe-desc {
   font-size: 14px;
   color: #888;
-  margin-bottom: 40px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
-.login-btn {
-  width: 70%;
+/* 拖拽手柄 */
+.drag-handle {
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  border-left: 1px solid #f0f0f0;
+  cursor: grab;
+}
+
+.drag-icon {
+  font-size: 20px;
+  color: #ccc;
+}
+
+.drag-handle:active .drag-icon {
+  color: #07c160;
+}
+
+.empty-tip {
+  width: 100%;
+  text-align: center;
+  color: #999;
+  margin-top: 50px;
+}
+
+/* FAB Movable Area */
+.fab-movable-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 200;
+  pointer-events: none; /* 让点击穿透到底层列表 */
+}
+
+.fab-movable-view {
+  width: auto;
+  height: auto;
+  pointer-events: auto; /* 恢复按钮的可点击性 */
+}
+
+/* FAB Container */
+.fab-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  /* 移除 fixed 定位，因为 movable-view 已经负责定位了 */
+}
+
+/* 主按钮 (圆形) */
+.fab-circle {
+  width: 56px;
+  height: 56px;
+  background-color: #07c160;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(7, 193, 96, 0.4);
+  transition: transform 0.1s;
+}
+
+.circle-icon {
+  color: white;
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 4px; /* 微调垂直居中 */
+}
+
+/* 模版按钮 (胶囊形) */
+.fab-pill {
+  height: 40px;
+  background-color: #fff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: #333;
+  transition: transform 0.1s;
+}
+
+.pill-icon {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.pill-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Active 状态 */
+.fab-circle:active, .fab-pill:active {
+  transform: scale(0.95);
+}
+
+/* Template Modal */
+.template-modal {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.close-btn {
+  font-size: 24px;
+  color: #999;
+  padding: 0 10px;
+}
+
+.template-list {
+  flex: 1;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.template-item {
+  display: flex;
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.tpl-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  margin-right: 12px;
+}
+
+.tpl-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.tpl-name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.tpl-desc {
+  font-size: 12px;
+  color: #888;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.tpl-action {
+  padding: 6px 14px;
+  background-color: #07c160;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 16px;
+  margin-left: 10px;
 }

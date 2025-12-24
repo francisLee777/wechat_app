@@ -1,4 +1,6 @@
-import { getFamilyMembers, removeMember, quitFamily, getCurrentUser, getFamilyById, User, Family } from '../../utils/db';
+import { getFamilyMembers, removeMember, quitFamily, getFamilyById, deleteFamily } from '../../api/family';
+import { getCurrentUser } from '../../api/auth';
+import type { User, Family } from '../../models/index';
 
 Page({
   data: {
@@ -8,7 +10,13 @@ Page({
   },
 
   onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 3 });
+    }
+    wx.showTabBar({});
     this.loadData();
+    const token = wx.getStorageSync('AUTH_TOKEN');
+    this.setData({ token });
   },
 
   async loadData() {
@@ -27,8 +35,11 @@ Page({
         console.error(e);
       }
     } else {
-      // 异常情况，返回首页
-      wx.navigateBack();
+      // 未加入家庭，仅清空数据，等待 UI 渲染空状态
+      this.setData({
+        family: null,
+        members: []
+      });
     }
   },
 
@@ -73,7 +84,30 @@ Page({
         if (res.confirm) {
           try {
             await quitFamily();
-            wx.reLaunch({ url: '/pages/index/index' }); // 退出后重置到首页
+            // 退出后刷新当前页，显示“空状态”
+            this.loadData();
+            wx.showToast({ title: '已退出', icon: 'success' });
+          } catch (e: any) {
+            wx.showToast({ title: e.message, icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
+  // 解散家庭
+  handleDelete() {
+    wx.showModal({
+      title: '危险操作',
+      content: '确定要解散当前家庭吗？此操作将删除所有留言、食谱且不可恢复！',
+      confirmColor: '#FF0000',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await deleteFamily();
+            wx.showToast({ title: '家庭已解散', icon: 'none' });
+            // 解散后刷新当前页，显示“空状态”
+            this.loadData();
           } catch (e: any) {
             wx.showToast({ title: e.message, icon: 'none' });
           }

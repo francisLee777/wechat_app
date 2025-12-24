@@ -1,18 +1,51 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/menu/index",
+    "pages/message/board",
+    "pages/family/manage",
+    "pages/profile/index",
     "pages/family/create",
     "pages/family/join",
-    "pages/family/manage",
-    "pages/recipe/list",
     "pages/recipe/detail",
-    "pages/recipe/edit",
-    "pages/message/board"
+    "pages/recipe/edit"
   ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "家庭厨房",
     "navigationBarBackgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "菜谱",
+        "iconPath": "assets/images/tab_recipe.png",
+        "selectedIconPath": "assets/images/tab_recipe_active.png"
+      },
+      {
+        "pagePath": "pages/menu/index",
+        "text": "菜单",
+        "iconPath": "assets/images/tab_menu.png",
+        "selectedIconPath": "assets/images/tab_menu_active.png"
+      },
+      {
+        "pagePath": "pages/message/board",
+        "text": "留言板",
+        "iconPath": "assets/images/tab_message.png",
+        "selectedIconPath": "assets/images/tab_message_active.png"
+      },
+      {
+        "pagePath": "pages/family/manage",
+        "text": "家庭",
+        "iconPath": "assets/images/tab_family.png",
+        "selectedIconPath": "assets/images/tab_family_active.png"
+      }
+    ]
   },
   "style": "v2",
   "componentFramework": "glass-easel",

@@ -10,17 +10,17 @@ import (
 
 const TableNameUserInfoDBModel = "user_info"
 
-// UserInfoDBModel mapped from table <user_info>
+// UserInfoDBModel 用户信息
 type UserInfoDBModel struct {
-	ID           int64     `gorm:"column:id;type:bigint(20) unsigned;primaryKey;autoIncrement:true;comment:自增id" json:"id"`                      // 自增id
+	ID           int64     `gorm:"column:id;type:bigint unsigned;primaryKey;autoIncrement:true;comment:自增id" json:"id"`                          // 自增id
 	OpenID       string    `gorm:"column:openId;type:varchar(128);not null;uniqueIndex:uk_open_id,priority:1;comment:微信提供的openId" json:"openId"` // 微信提供的openId
 	UserNickName string    `gorm:"column:user_nickName;type:varchar(128);not null;comment:创建人name" json:"user_nickName"`                         // 创建人name
 	UserIconURL  string    `gorm:"column:user_icon_url;type:varchar(512);not null;comment:头像url" json:"user_icon_url"`                           // 头像url
-	Status       int32     `gorm:"column:status;type:int(11);not null;default:1;comment:1-正常状态  2-删号" json:"status"`                             // 1-正常状态  2-删号
-	CreateTime   time.Time `gorm:"column:create_time;type:timestamp;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"`         // 创建时间
-	UpdateTime   time.Time `gorm:"column:update_time;type:timestamp;not null;default:CURRENT_TIMESTAMP;comment:最后更新时间" json:"update_time"`       // 最后更新时间
-	FamilyID     int64     `gorm:"column:family_id;type:bigint(20) unsigned;default:0;comment:所属家庭ID" json:"familyId"`                             // 所属家庭ID
-	Role         string    `gorm:"column:role;type:varchar(32);default:'member';comment:角色: admin/member" json:"role"`                               // 角色
+	Status       int32     `gorm:"column:status;type:int;not null;default:1;comment:1-正常状态  2-删号" json:"status"`                                 // 1-正常状态  2-删号
+	CreateTime   time.Time `gorm:"column:create_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"`          // 创建时间
+	UpdateTime   time.Time `gorm:"column:update_time;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:最后更新时间" json:"update_time"`        // 最后更新时间
+	FamilyID     int64     `gorm:"column:family_id;type:bigint unsigned;not null;comment:所属家庭ID" json:"family_id"`                               // 所属家庭ID
+	Role         string    `gorm:"column:role;type:varchar(32);not null;default:member;comment:角色: admin/member" json:"role"`                    // 角色: admin/member
 }
 
 // TableName UserInfoDBModel's table name
