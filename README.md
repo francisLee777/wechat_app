@@ -1,13 +1,9 @@
-下面是我帮你整理后的 Markdown 版 README，结构更清晰，也更符合开源/项目文档的常见规范，直接可用在 GitHub / GitLab。
-<img width="1078" height="500" alt="result" src="https://github.com/user-attachments/assets/e8e3edcf-4d57-4c47-9678-9baf414a4ddd" />
-
-⸻
-
 微信小程序 · 家庭菜谱（AI 辅助生成）
 
 一个面向家庭场景的微信小程序，用于 家庭成员协作管理菜谱、订餐与交流，并支持 AI 辅助生成菜谱内容。
 
 ⸻
+<img width="1078" height="500" alt="result" src="https://github.com/user-attachments/assets/e8e3edcf-4d57-4c47-9678-9baf414a4ddd" />
 
 ✨ 功能介绍
 
@@ -118,7 +114,6 @@ Forward Port	8080
 	•	在 微信开发者工具 中点击「编译 / 预览」
 	•	登录后即可使用全部功能
 
-⸻
 
 📝 说明
 	•	图片上传已支持前端压缩，降低流量消耗
